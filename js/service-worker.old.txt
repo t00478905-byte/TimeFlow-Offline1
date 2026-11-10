@@ -1,0 +1,96 @@
+
+const CACHE_NAME = "timeflow-static-v1";
+
+const STATIC_ASSETS = [
+    "/css/style.css",
+    "/js/supabase.js",
+    "/js/auth.js",
+    "/js/auth-guard.js",
+    "/js/app.js",
+    "/manifest.json"
+];
+
+// تثبيت Service Worker وتخزين الملفات الثابتة
+self.addEventListener("install", event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(async cache => {
+            await Promise.allSettled(
+                STATIC_ASSETS.map(file => cache.add(file))
+            );
+        })
+    );
+
+    self.skipWaiting();
+});
+
+// تفعيل النسخة الجديدة وحذف التخزين القديم
+self.addEventListener("activate", event => {
+    event.waitUntil(
+        caches.keys().then(keys =>
+            Promise.all(
+                keys
+                    .filter(key => key !== CACHE_NAME)
+                    .map(key => caches.delete(key))
+            )
+        )
+    );
+
+    self.clients.claim();
+});
+
+// التعامل مع طلبات الملفات والصفحات
+self.addEventListener("fetch", event => {
+    const request = event.request;
+    const url = new URL(request.url);
+
+    // تجاهل الطلبات الخارجية وطلبات الإرسال
+    if (url.origin !== self.location.origin) return;
+    if (request.method !== "GET") return;
+
+    // عدم تخزين واجهات API أو بيانات المستخدم
+    if (
+        url.pathname.startsWith("/rest/") ||
+        url.pathname.startsWith("/auth/")
+    ) return;
+
+    // الصفحات: الاتصال بالإنترنت أولاً
+    if (request.mode === "navigate") {
+        event.respondWith(
+            fetch(request).catch(() =>
+                new Response(
+                    "<html lang='ar' dir='rtl'><meta charset='UTF-8'><title>TimeFlow</title><body style='background:#101426;color:white;text-align:center;padding:50px;font-family:Arial'><h2>لا يوجد اتصال بالإنترنت</h2><p>تحقق من اتصالك وحاول مرة أخرى.</p></body></html>",
+                    {
+                        headers: {
+                            "Content-Type": "text/html; charset=UTF-8"
+                        }
+                    }
+                )
+            )
+        );
+
+        return;
+    }
+
+    // الملفات الثابتة: استخدام النسخة المخزنة إن وجدت
+    const isStatic =
+        /\.(css|js|png|svg|ico|woff2?)$/i.test(url.pathname) ||
+        url.pathname === "/manifest.json";
+
+    if (!isStatic) return;
+
+    event.respondWith(
+        caches.match(request).then(async cached => {
+            if (cached) return cached;
+
+            const response = await fetch(request);
+
+            if (response.ok) {
+                const cache = await caches.open(CACHE_NAME);
+                await cache.put(request, response.clone());
+            }
+
+            return response;
+        })
+    );
+});
+

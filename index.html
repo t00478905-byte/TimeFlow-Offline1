@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101426">
+
+    <title>TimeFlow | تنظيم الوقت</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon/icon-192.png">
+    <link rel="apple-touch-icon" href="icon/icon-192.png">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="TimeFlow">
+    <meta name="mobile-web-app-capable" content="yes">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
+        <div class="logo">
+            <span class="logo-icon">◷</span>
+            <h2>TimeFlow</h2>
+        </div>
+
+        <p class="menu-title">القائمة الرئيسية</p>
+
+        <nav>
+            <a href="#dashboard" class="nav-link active">⌂ الرئيسية</a>
+            <a href="#tasks" class="nav-link">☑ مهامي</a>
+            <a href="#schedule" class="nav-link">▦ الجدول اليومي</a>
+            <a href="#statistics" class="nav-link">▥ الإحصائيات</a>
+            <button id="logout-button">🚪 تسجيل الخروج</button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p>نظّم وقتك، حقق أهدافك.</p>
+            <span>TimeFlow © 2026</span>
+        </div>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content" id="dashboard">
+
+        <header class="topbar">
+            <div id="offline-status" role="status" aria-live="polite" style="display:inline-flex;align-items:center;gap:8px;font-size:12px;color:#aab1ca;margin-bottom:8px;padding:7px 12px;border:1px solid rgba(170,177,202,.22);border-radius:999px;background:rgba(255,255,255,.035)">جاري فحص الاتصال...</div>
+            <div id="sync-notice" role="status" aria-live="polite" style="display:none;margin:0 0 10px;padding:9px 12px;border-radius:10px;background:rgba(85,217,154,.12);color:#55d99a;font-size:12px">تمت مزامنة التغييرات بنجاح.</div>
+            <div>
+                <h1>لوحة التحكم</h1>
+                <p>مرحباً بك! لننظم يومك ونحقق أهدافك.</p>
+            </div>
+
+            <div class="date-box">
+                <span id="current-date">جاري تحميل التاريخ...</span>
+                <strong id="current-time">00:00:00</strong>
+            </div>
+        </header>
+
+        <!-- الترحيب -->
+        <section class="welcome-card">
+            <div>
+                <h2>ابدأ يومك بإنجاز جديد! ✨</h2>
+                <p>كل مهمة تنجزها تقربك خطوة من أهدافك.</p>
+            </div>
+            <div class="welcome-icon">🚀</div>
+        </section>
+
+        <!-- بطاقات الإحصائيات -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <span>إجمالي المهام</span>
+                <h2 id="total-tasks">3</h2>
+                <small>جميع مهامك اليومية</small>
+            </div>
+
+            <div class="stat-card">
+                <span>المهام المكتملة</span>
+                <h2 id="completed-tasks">1</h2>
+                <small>أحسنت، استمر!</small>
+            </div>
+
+            <div class="stat-card">
+                <span>المهام المتبقية</span>
+                <h2 id="remaining-tasks">2</h2>
+                <small>لديك المزيد من الإنجاز</small>
+            </div>
+
+            <div class="stat-card">
+                <span>نسبة الإنجاز</span>
+                <h2 id="progress-percent">33%</h2>
+                <small>إنجازك اليومي</small>
+            </div>
+
+        </section>
+
+        <!-- المهام -->
+        <section class="tasks-section" id="tasks">
+
+            <div class="section-header">
+                <div>
+                    <h2>مهامي اليومية</h2>
+                    <p>تابع مهامك وأنجزها بالترتيب.</p>
+                </div>
+
+                <button class="add-btn" id="add-task-btn">
+                    + إضافة مهمة
+                </button>
+            </div>
+
+            <div class="task-list" id="task-list">
+
+                <div class="task-item">
+                    <input type="checkbox" checked>
+                    <div>
+                        <h3>تنظيم جدول اليوم</h3>
+                        <p>شخصي • أولوية متوسطة</p>
+                    </div>
+                    <span class="task-status completed">مكتملة</span>
+                </div>
+
+                <div class="task-item">
+                    <input type="checkbox">
+                    <div>
+                        <h3>إنجاز المهام الدراسية</h3>
+                        <p>دراسة • أولوية عالية</p>
+                    </div>
+                    <span class="task-status pending">قيد الانتظار</span>
+                </div>
+
+                <div class="task-item">
+                    <input type="checkbox">
+                    <div>
+                        <h3>العمل على المشاريع</h3>
+                        <p>عمل • أولوية متوسطة</p>
+                    </div>
+                    <span class="task-status pending">قيد الانتظار</span>
+                </div>
+
+            </div>
+
+        </section>
+
+<!-- مؤقت التركيز -->
+<section class="pomodoro-section" id="focus">
+
+    <div class="pomodoro-heading">
+        <h2>⏱️ مؤقت التركيز</h2>
+        <p>نظّم وقتك وركز على إنجاز مهمة واحدة.</p>
+    </div>
+
+    <div class="timer-box">
+
+        <div class="timer-modes">
+            <button class="mode-btn active" data-mode="focus">
+                تركيز
+            </button>
+
+            <button class="mode-btn" data-mode="short">
+                استراحة قصيرة
+            </button>
+
+            <button class="mode-btn" data-mode="long">
+                استراحة طويلة
+            </button>
+        </div>
+
+        <div class="timer-circle">
+            <div id="timer-display">25:00</div>
+            <span id="timer-label">وقت التركيز</span>
+        </div>
+
+        <div class="timer-controls">
+            <button id="start-timer">ابدأ</button>
+            <button id="pause-timer">إيقاف مؤقت</button>
+            <button id="reset-timer">إعادة ضبط</button>
+        </div>
+
+        <p class="timer-tip">
+            ركز على مهمة واحدة واترك المشتتات جانباً.
+        </p>
+
+    </div>
+</section>
+
+<!-- التقويم الذكي -->
+<section class="calendar-section" id="schedule">
+
+    <div class="calendar-header">
+        <div>
+            <h2>📅 التقويم الذكي</h2>
+            <p>خطط لأيامك ونظّم مواعيدك.</p>
+        </div>
+
+        <div class="calendar-navigation">
+            <button id="prev-month">❯</button>
+            <h3 id="calendar-month">الشهر</h3>
+            <button id="next-month">❮</button>
+        </div>
+    </div>
+
+    <div class="calendar-grid" id="calendar-grid">
+    </div>
+
+    <div class="selected-day">
+        <h3 id="selected-date-title">مواعيد اليوم</h3>
+
+        <div id="calendar-events">
+            <p class="empty-events">اختر يوماً لعرض مواعيده.</p>
+        </div>
+
+        <button class="add-btn" id="add-event-btn">
+            + إضافة موعد
+        </button>
+    </div>
+
+</section>
+
+        <!-- التقدم -->
+        <section class="progress-section" id="statistics">
+            <h2>التقدم اليومي</h2>
+            <p>تابع نسبة إنجازك للمهام اليومية.</p>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 33%"></div>
+            </div>
+
+            <span id="progress-text">أنجزت 1 من أصل 3 مهام</span>
+        </section>
+
+<!-- لوحة الإحصائيات -->
+<section class="analytics-section">
+
+    <div class="analytics-heading">
+        <h2>📊 تحليل الإنتاجية</h2>
+        <p>اكتشف كيف تستثمر وقتك وتتابع إنجازاتك.</p>
+    </div>
+
+    <div class="analytics-cards">
+
+        <div class="analytics-card">
+            <span>إجمالي المهام</span>
+            <h3 id="analytics-total">0</h3>
+        </div>
+
+        <div class="analytics-card">
+            <span>المهام المكتملة</span>
+            <h3 id="analytics-completed">0</h3>
+        </div>
+
+        <div class="analytics-card">
+            <span>المهام المتبقية</span>
+            <h3 id="analytics-pending">0</h3>
+        </div>
+
+    </div>
+
+    <div class="category-analysis">
+        <h3>توزيع المهام حسب التصنيف</h3>
+
+        <div id="category-chart"></div>
+    </div>
+
+</section>
+
+        <footer>
+            جميع الحقوق محفوظة © 2026 - TimeFlow
+        </footer>
+
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/offline-store.js"></script>
+<script src="js/auth-guard.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+        navigator.serviceWorker.register("service-worker.js")
+            .then(function () {
+                console.log("TimeFlow PWA is ready!");
+            })
+            .catch(function (error) {
+                console.error("PWA registration failed:", error);
+            });
+    });
+}
+</script>
+<script>
+(function(){
+ const el=document.getElementById('offline-status');
+ const notice=document.getElementById('sync-notice');
+ let noticeTimer;
+ function paint(event){
+   if(!el)return;
+   const pending=window.TimeFlowOffline?window.TimeFlowOffline.pendingCount():0;
+   const online=navigator.onLine;
+   const state=event && event.detail ? event.detail.state : '';
+   if(!online){
+     el.textContent='● غير متصل — تعمل البيانات المحفوظة محلياً';
+     el.style.color='#ffc76b';
+     el.style.borderColor='rgba(255,199,107,.35)';
+   } else if(state==='syncing'){
+     el.textContent='● متصل — جارٍ مزامنة التغييرات…';
+     el.style.color='#8db8ff';
+     el.style.borderColor='rgba(141,184,255,.35)';
+   } else if(pending){
+     el.textContent=`● متصل — ${pending} تغييرات بانتظار المزامنة`;
+     el.style.color='#ffc76b';
+     el.style.borderColor='rgba(255,199,107,.35)';
+   } else {
+     el.textContent='● متصل — جميع التغييرات متزامنة';
+     el.style.color='#55d99a';
+     el.style.borderColor='rgba(85,217,154,.35)';
+   }
+   if(event && event.detail && event.detail.synced && notice){
+     notice.textContent='✓ تمت مزامنة التغييرات مع حسابك بنجاح.';
+     notice.style.display='block';
+     clearTimeout(noticeTimer);
+     noticeTimer=setTimeout(()=>{notice.style.display='none';},5000);
+   }
+ }
+ window.addEventListener('online',()=>paint());
+ window.addEventListener('offline',()=>paint());
+ window.addEventListener('timeflow-sync-status',paint);
+ setTimeout(()=>paint(),1200);
+})();
+</script>
+</body>
+</html>

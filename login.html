@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101426">
+
+    <title>TimeFlow | تسجيل الدخول</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon/icon-192.png">
+    <link rel="apple-touch-icon" href="icon/icon-192.png">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="TimeFlow">
+    <meta name="mobile-web-app-capable" content="yes">
+</head>
+<style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #101629;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 430px;
+            padding: 35px;
+            background: #171e35;
+            border: 1px solid #303b5a;
+            border-radius: 20px;
+        }
+
+        .auth-card h1 {
+            color: #a995ff;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .auth-card p {
+            color: #aab1ca;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .auth-card input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #394565;
+            border-radius: 9px;
+            background: #202943;
+            color: white;
+            font-size: 15px;
+        }
+
+        .auth-card button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 9px;
+            background: #795cff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .switch-auth {
+            color: #b49fff;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #auth-message {
+            margin-top: 15px;
+            font-size: 14px;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <h1>TimeFlow</h1>
+        <p id="auth-description">سجّل الدخول لتنظيم وقتك وإنجاز مهامك</p>
+
+        <form id="auth-form">
+            <input
+                type="email"
+                id="email"
+                placeholder="البريد الإلكتروني"
+                autocomplete="email"
+                required
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="كلمة المرور"
+                autocomplete="current-password"
+                minlength="6"
+                required
+            >
+
+            <button type="submit" id="auth-button">
+                تسجيل الدخول
+            </button>
+        </form>
+
+        <div class="switch-auth" id="switch-auth">
+            ليس لديك حساب؟ أنشئ حساباً جديداً
+        </div>
+
+        <div id="auth-message" role="status"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+        navigator.serviceWorker.register("service-worker.js")
+            .then(function () {
+                console.log("TimeFlow PWA is ready!");
+            })
+            .catch(function (error) {
+                console.error("PWA registration failed:", error);
+            });
+    });
+}
+</script>
+</body>
+</html>
